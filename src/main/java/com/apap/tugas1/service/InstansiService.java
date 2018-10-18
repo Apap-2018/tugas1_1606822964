@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import com.apap.tugas1.model.InstansiModel;
+import com.apap.tugas1.model.ProvinsiModel;
 
 /**
  *  InstansiService
@@ -12,4 +13,6 @@ import com.apap.tugas1.model.InstansiModel;
 public interface InstansiService {
 	List<InstansiModel> viewAll();
 	InstansiModel findInstansiById(BigInteger id);
+	List<InstansiModel> viewByProvinsi(ProvinsiModel provinsi);
+	List<InstansiModel> viewByNama(String nama);
 }

@@ -2,20 +2,27 @@ package com.apap.tugas1.controller;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.apap.tugas1.model.InstansiModel;
+import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.model.PegawaiModel;
+import com.apap.tugas1.model.ProvinsiModel;
 import com.apap.tugas1.service.InstansiService;
 import com.apap.tugas1.service.JabatanService;
 import com.apap.tugas1.service.PegawaiService;
+import com.apap.tugas1.service.ProvinsiService;
 
 /**
  *  PegawaiController
@@ -31,6 +38,9 @@ public class PegawaiController {
 	
 	@Autowired
 	private InstansiService instansiService;
+	
+		@Autowired
+	private ProvinsiService provinsiService;
 	
 	@RequestMapping("/")
 	private String home(Model model) {
@@ -49,6 +59,50 @@ public class PegawaiController {
 		model.addAttribute("pegawai", pegawai);
 		model.addAttribute("gaji", df.format(pegawai.getGaji()));
 		return "lihatPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.GET)
+	private String addJabatan(Model model) {
+		PegawaiModel pegawai = new PegawaiModel();
+		pegawai.setDaftarJabatan(new ArrayList<JabatanModel>());
+		pegawai.getDaftarJabatan().add(new JabatanModel());
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewAll());
+		model.addAttribute("allJabatan", jabatanService.viewAll());
+		return "addPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
+	private String addJabatanSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
+
+		return "addPegawaiSukses";
+	}
+	
+	@RequestMapping(value = "/pegawai/instansi", method = RequestMethod.GET)
+	@ResponseBody
+	public List<InstansiModel> getInstansi(@RequestParam (value = "provinsiId", required = true) BigInteger provinsiId) {
+	    ProvinsiModel provinsi = provinsiService.findProvinsiById(provinsiId);
+		return instansiService.viewByProvinsi(provinsi);
+	}
+	
+	@RequestMapping(value = "/pegawai/provinsi", method = RequestMethod.GET)
+	@ResponseBody
+	public List<ProvinsiModel> getProvinsi(@RequestParam (value = "instansiId", required = true) BigInteger instansiId) {
+	    String namaInstansi = instansiService.findInstansiById(instansiId).getNama();
+	    List<InstansiModel> daftarInstansi= instansiService.viewByNama(namaInstansi);
+	    List<ProvinsiModel> provinsi = new ArrayList<ProvinsiModel>();
+	    for(int i=0;i<daftarInstansi.size();i++) {
+	    	provinsi.add(daftarInstansi.get(i).getProvinsi());
+	    }
+		return provinsi;
+	}
+	
+	@RequestMapping(value="/pegawai/tambah/{licenseNumber}", params={"addRow"}, method = RequestMethod.POST)
+	public String addRow(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
+		pegawai.getDaftarJabatan().add(new JabatanModel());
+	    model.addAttribute("pegawai", pegawai);
+	    return "addPegawai";
 	}
 	
 	@RequestMapping(value = "/pegawai/termuda-tertua", method = RequestMethod.GET)

@@ -10,6 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.repository.JabatanDb;
 
+/**
+ * JabatanServiceImpl
+ * @author Priscilla Tiffany
+ *
+ */
 @Service
 @Transactional
 public class JabatanServiceImpl implements JabatanService{

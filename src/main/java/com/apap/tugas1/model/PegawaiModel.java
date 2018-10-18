@@ -3,7 +3,6 @@ package com.apap.tugas1.model;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 

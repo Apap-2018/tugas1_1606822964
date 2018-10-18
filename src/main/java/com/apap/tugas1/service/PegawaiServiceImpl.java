@@ -7,6 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.apap.tugas1.model.PegawaiModel;
 import com.apap.tugas1.repository.PegawaiDb;
 
+/**
+ * PegawaiServiceImpl
+ * @author Priscilla Tiffany
+ *
+ */
 @Service
 @Transactional
 public class PegawaiServiceImpl implements PegawaiService{
