@@ -12,6 +12,7 @@
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
 	<div style="margin-left:2rem">
+		<p th:text="${message}" style="color:#d4af37"></p>
 		<h4 th:text="'Lihat Data Pegawai - '+ ${pegawai.nip}"></h4>
 		<div class="row" style="margin-left:0rem;margin-top:1rem">
 			<div class="column" style="margin-right:3rem">
@@ -43,7 +44,7 @@
 			</div>
 		</div>
 		
-		<a class="btn btn-warning" th:href="@{/}">Ubah</a>
+		<a class="btn btn-warning" th:href="@{|/pegawai/ubah/?nip=${pegawai.nip}|}">Ubah</a>
 		
 	</div>
 </body>

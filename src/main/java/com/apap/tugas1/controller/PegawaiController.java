@@ -58,11 +58,11 @@ public class PegawaiController {
 	private String lihatPegawai(@RequestParam("nip") String nip, Model model) {
 		PegawaiModel pegawai = pegawaiService.getPegawaiByNip(nip);
 		
-		
 		DecimalFormat df = new DecimalFormat("#");
 		
 		model.addAttribute("pegawai", pegawai);
 		model.addAttribute("gaji", df.format(pegawai.getGaji()));
+		model.addAttribute("message", "");
 		return "lihatPegawai";
 	}
 	
@@ -135,8 +135,9 @@ public class PegawaiController {
 	}
 	
 	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
-	private String addPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
-		System.out.println(pegawai.getInstansi());
+	private String addPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, @RequestParam("instansi") BigInteger idInstansi, Model model) {
+		InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+		pegawai.setInstansi(instansi);
 		pegawaiService.addPegawai(pegawai);
 		
 		model.addAttribute("pegawai", pegawai);
@@ -280,5 +281,24 @@ public class PegawaiController {
 		}
 		
 		return "cariPegawai";
-	}	
+	}
+	
+	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.GET)
+	private String ubahPegawai(@RequestParam("nip") String nip, Model model) {
+		PegawaiModel pegawai = pegawaiService.getPegawaiByNip(nip);
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("message", "");
+
+		return "ubahPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.POST)
+	private String ubahPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
+		pegawaiService.addPegawai(pegawai);
+		
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("message", "Berhasil mengubah data pegawai");
+
+		return "addPegawaiSukses";
+	}
 }

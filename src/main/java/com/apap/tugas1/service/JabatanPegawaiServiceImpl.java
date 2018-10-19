@@ -8,7 +8,7 @@ import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.repository.JabatanPegawaiDb;
 
 /**
- * PegawaiServiceImpl
+ * JabatanPegawaiServiceImpl
  * @author Priscilla Tiffany
  *
  */

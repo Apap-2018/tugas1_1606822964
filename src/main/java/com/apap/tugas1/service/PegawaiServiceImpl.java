@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.apap.tugas1.model.InstansiModel;
 import com.apap.tugas1.model.PegawaiModel;
-import com.apap.tugas1.repository.InstansiDb;
 import com.apap.tugas1.repository.PegawaiDb;
 
 /**
@@ -23,9 +22,6 @@ import com.apap.tugas1.repository.PegawaiDb;
 public class PegawaiServiceImpl implements PegawaiService{
 	@Autowired
 	private PegawaiDb pegawaiDb;
-	
-	@Autowired
-	private InstansiDb instansiDb;
 
 	@Override
 	public PegawaiModel getPegawaiByNip(String nip) {
