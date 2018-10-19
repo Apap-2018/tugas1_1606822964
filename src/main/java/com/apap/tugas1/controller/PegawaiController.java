@@ -1,9 +1,14 @@
 package com.apap.tugas1.controller;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,13 +75,12 @@ public class PegawaiController {
 		model.addAttribute("allProvinsi", provinsiService.viewAll());
 		model.addAttribute("allInstansi", instansiService.viewAll());
 		model.addAttribute("allJabatan", jabatanService.viewAll());
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		
+		model.addAttribute("tanggalLahir", dateFormat.format(date));
 		return "addPegawai";
-	}
-	
-	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
-	private String addJabatanSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
-
-		return "addPegawaiSukses";
 	}
 	
 	@RequestMapping(value = "/pegawai/instansi", method = RequestMethod.GET)
@@ -98,11 +102,46 @@ public class PegawaiController {
 		return provinsi;
 	}
 	
-	@RequestMapping(value="/pegawai/tambah/{licenseNumber}", params={"addRow"}, method = RequestMethod.POST)
+	@RequestMapping(value="/pegawai/tambah", params={"addRow"}, method = RequestMethod.POST)
 	public String addRow(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
 		pegawai.getDaftarJabatan().add(new JabatanModel());
 	    model.addAttribute("pegawai", pegawai);
+	    
+	    model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewByProvinsi(pegawai.getInstansi().getProvinsi()));
+		model.addAttribute("allJabatan", jabatanService.viewAll());
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String tanggalLahir = simpleDateFormat.format(pegawai.getTanggalLahir());
+		model.addAttribute("tanggalLahir", tanggalLahir);
 	    return "addPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST, params={"deleteRow"})
+	private String deleteRow(@ModelAttribute PegawaiModel pegawai, Model model,final BindingResult bindingResult, final HttpServletRequest req) {
+		Integer rowId =  Integer.valueOf(req.getParameter("deleteRow"));
+		pegawai.getDaftarJabatan().remove(rowId.intValue());
+		model.addAttribute("pegawai", pegawai); 
+		
+	    model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewByProvinsi(pegawai.getInstansi().getProvinsi()));
+		model.addAttribute("allJabatan", jabatanService.viewAll());
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String tanggalLahir = simpleDateFormat.format(pegawai.getTanggalLahir());
+		model.addAttribute("tanggalLahir", tanggalLahir);
+		
+		return "addPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
+	private String addPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
+		System.out.println(pegawai.getInstansi());
+		pegawaiService.addPegawai(pegawai);
+		
+		model.addAttribute("pegawai", pegawai);
+
+		return "addPegawaiSukses";
 	}
 	
 	@RequestMapping(value = "/pegawai/termuda-tertua", method = RequestMethod.GET)
@@ -133,14 +172,113 @@ public class PegawaiController {
 			}
 			model.addAttribute("message", "");
 		}	
+		DecimalFormat df = new DecimalFormat("#");
 		
 		model.addAttribute("pegawaiTermuda", pegawaiTermuda);
-		model.addAttribute("gajiPegawaiTermuda", pegawaiTermuda.getGaji());
+		model.addAttribute("gajiPegawaiTermuda", df.format(pegawaiTermuda.getGaji()));
 		
 		model.addAttribute("pegawaiTertua", pegawaiTertua);
-		model.addAttribute("gajiPegawaiTertua", pegawaiTertua.getGaji());
+		model.addAttribute("gajiPegawaiTertua", df.format(pegawaiTertua.getGaji()));
 		
 		return "lihatPegawaiTermudaTertua";
 	}
-
+	
+	@RequestMapping("/pegawai/cari")
+	private String cariPegawai(Model model) {
+		model.addAttribute("allPegawai", pegawaiService.viewAll());
+		model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewAll());
+		model.addAttribute("allJabatan", jabatanService.viewAll());
+		return "cariPegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/cari", method = RequestMethod.GET, params = {"idProvinsi","idInstansi","idJabatan"})
+	private String cariPegawaiProvinsiInstansiJabatan(@RequestParam("idProvinsi") BigInteger idProvinsi, @RequestParam("idInstansi") BigInteger idInstansi, @RequestParam("idJabatan") BigInteger idJabatan, Model model) {
+		model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewAll());
+		model.addAttribute("allJabatan", jabatanService.viewAll());
+		if(idProvinsi.intValue()==0&&idJabatan.intValue()==0) {
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			model.addAttribute("allPegawai", pegawaiService.findByInstansi(instansi));
+		}
+		else if(idProvinsi.intValue()==0&&idInstansi.intValue()==0) {
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			List<PegawaiModel> allPegawai = pegawaiService.viewAll();
+			List<PegawaiModel> allPegawaiInJabatan = new ArrayList<PegawaiModel>();
+			for(int i=0;i<allPegawai.size();i++) {
+				for(int j=0;j<allPegawai.get(i).getDaftarJabatan().size();j++) {
+					if(allPegawai.get(i).getDaftarJabatan().get(j)==jabatan)
+						allPegawaiInJabatan.add(allPegawai.get(i));
+				}
+			}
+			model.addAttribute("allPegawai",allPegawaiInJabatan);
+		}
+		else if(idJabatan.intValue()==0&&idInstansi.intValue()==0) {
+			ProvinsiModel provinsi = provinsiService.findProvinsiById(idProvinsi);
+			List<InstansiModel> allInstansiInProvinsi = instansiService.viewByProvinsi(provinsi);
+				
+			List<PegawaiModel> allPegawai = pegawaiService.viewAll();
+			List<PegawaiModel> allPegawaiInProvinsi = new ArrayList<PegawaiModel>();
+			for(int i=0;i<allPegawai.size();i++) {
+				if(allInstansiInProvinsi.contains(allPegawai.get(i).getInstansi())) {
+					allPegawaiInProvinsi.add(allPegawai.get(i));
+				}
+			}
+			model.addAttribute("allPegawai",allPegawaiInProvinsi);
+		}
+		else if(idProvinsi.intValue()==0) {
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			List<PegawaiModel> allPegawaiInInstansi = pegawaiService.findByInstansi(instansi);
+			
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			List<PegawaiModel> allPegawaiInJabatanInstansi = new ArrayList<PegawaiModel>();
+			for(int i=0;i<allPegawaiInInstansi.size();i++) {
+				for(int j=0;j<allPegawaiInInstansi.get(i).getDaftarJabatan().size();j++) {
+					if(allPegawaiInInstansi.get(i).getDaftarJabatan().get(j)==jabatan)
+						allPegawaiInJabatanInstansi.add(allPegawaiInInstansi.get(i));
+				}
+			}
+			model.addAttribute("allPegawai",allPegawaiInJabatanInstansi);
+		}
+		else if(idInstansi.intValue()==0) {
+			ProvinsiModel provinsi = provinsiService.findProvinsiById(idProvinsi);
+			List<InstansiModel> allInstansiInProvinsi = instansiService.viewByProvinsi(provinsi);
+			
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			List<PegawaiModel> allPegawaiInProvinsiJabatan = new ArrayList<PegawaiModel>();
+			List<PegawaiModel> allPegawai = pegawaiService.viewAll();
+			for(int i=0;i<allPegawai.size();i++) {
+				if(allInstansiInProvinsi.contains(allPegawai.get(i).getInstansi())) {
+					for(int j=0;j<allPegawai.get(i).getDaftarJabatan().size();j++) {
+						if(allPegawai.get(i).getDaftarJabatan().get(j)==jabatan) {
+							allPegawaiInProvinsiJabatan.add(allPegawai.get(i));
+						}
+					}
+				}
+			}
+		
+			model.addAttribute("allPegawai",allPegawaiInProvinsiJabatan);
+		}
+		else if(idJabatan.intValue()==0) {
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			List<PegawaiModel> allPegawai = pegawaiService.findByInstansi(instansi);
+			model.addAttribute("allPegawai",allPegawai);
+		}
+		else {
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			List<PegawaiModel> allPegawai = pegawaiService.findByInstansi(instansi);
+			
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			List<PegawaiModel> allPegawaiInJabatanInstansiProvinsi = new ArrayList<PegawaiModel>();
+			for(int i=0;i<allPegawai.size();i++) {
+				for(int j=0;j<allPegawai.get(i).getDaftarJabatan().size();j++) {
+					if(allPegawai.get(i).getDaftarJabatan().get(j)==jabatan)
+						allPegawaiInJabatanInstansiProvinsi.add(allPegawai.get(i));
+				}
+			}
+			model.addAttribute("allPegawai",allPegawaiInJabatanInstansiProvinsi);
+		}
+		
+		return "cariPegawai";
+	}	
 }

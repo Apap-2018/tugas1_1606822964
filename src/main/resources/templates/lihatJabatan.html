@@ -19,11 +19,13 @@
 				<p>Nama</p>
 				<p>Deskripsi</p>
 				<p>Gaji Pokok</p>
+				<p>Jumlah Pegawai</p>
 			</div>
 			<div class="column">
 				<p th:text="${jabatan.nama}"></p>
 				<p th:text="${jabatan.deskripsi}"></p>
-				<p th:text="'Rp'+${jabatan.gaji_pokok}"></p>				
+				<p th:text="'Rp'+${jabatan.gaji_pokok}"></p>
+				<p th:text="${jumlahPegawai}"></p>				
 			</div>
 		</div>
 		<table>

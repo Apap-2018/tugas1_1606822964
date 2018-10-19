@@ -30,9 +30,9 @@
 			<div class="column">
 				<p th:text="${pegawai.nip}"></p>
 				<p th:text="${pegawai.nama}"></p>
-				<p th:text="${pegawai.tempat_lahir}"></p>
-				<p th:text="${pegawai.tanggal_lahir}"></p>
-				<p th:text="${pegawai.tahun_masuk}"></p>
+				<p th:text="${pegawai.tempatLahir}"></p>
+				<p th:text="${pegawai.tanggalLahir}"></p>
+				<p th:text="${pegawai.tahunMasuk}"></p>
 				<p th:text="${pegawai.instansi.nama} + ' - ' + ${pegawai.instansi.provinsi.nama}"></p>
 				<ul th:each="jabatan : ${pegawai.daftarJabatan}">
 					<li th:text="${jabatan.nama}"></li>
