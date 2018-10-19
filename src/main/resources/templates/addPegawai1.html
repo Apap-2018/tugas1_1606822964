@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Ubah Pegawai</title>
+	<title>Tambah Pegawai</title>
 	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
 	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
 	<object th:include="fragments/fragment :: jquery" th:remove="tag"></object>
@@ -13,7 +13,7 @@
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
 	<div style="margin-left:2rem">
-		<h4>Ubah Pegawai</h4>
+		<h4>Tambah Pegawai</h4>
 		<form th:action="@{/pegawai/tambah}" th:object="${pegawai}" method="POST" id="tambahPegawai">
 			<table>
 				<tr style="height:3rem">
@@ -26,13 +26,13 @@
 				</tr>
 				<tr style="height:3rem">
 					<td>Tanggal Lahir</td>
-					<td><input type="date" name="tanggalLahir" maxlength="255" class="form-control" required="required" th:value="*{tanggalLahir}"/></td>
+					<td><input type="date" name="tanggalLahir" maxlength="255" class="form-control" required="required" th:value="${tanggalLahir}"/></td>
 				</tr>
 				<tr style="height:3rem">
 					<td>Tahun Masuk</td>
-					<td><input type="text" name="tahunMasuk" th:max="2018" class="form-control" required="required" th:value="*{tahunMasuk}" /></td>
+					<td><input type="number" name="tahunMasuk" th:max="2018" class="form-control" required="required" th:value="*{tahunMasuk}" /></td>
 				</tr>
-				
+				<!-- 			
 				<tr style="height:3rem">
 					<td>Provinsi</td>
 					<td>
@@ -42,12 +42,13 @@
 					    </select>
 					</td>
 				</tr>
+				
 				<tr style="height:3rem">
 					<td>Nama Instansi</td>
 					<td>
-						<select class="form-control" th:name="instansi" required="required">
+						<select class="form-control" th:name="instansi" required="required" id="instansi" th:value="*{instansi}">
 							<option disabled="disabled" selected="selected" >Pilih Instansi</option>
-					    	<option th:each="instansi : ${allInstansi}" th:value="${instansi}" th:text="${instansi.nama}"></option>
+					    	<option th:each="instansi : ${allInstansi}" th:id="${instansi.id}" th:text="${instansi.nama}"></option>
 					    </select>
 					</td>
 				</tr>
@@ -57,20 +58,13 @@
 					<td>
 						<select class="form-control" name="jabatan">
 							<option disabled="disabled" selected="selected" >Pilih Jabatan</option>
-					    	<option th:each="jabatan : ${allJabatan}" th:value="${jabatan.id}" th:text="${jabatan.nama}"></option>
-					   		
+					    	<option th:each="jabatan : ${allJabatan}" th:value="${jabatan.nama}" th:text="${jabatan.nama}"></option>
 					    </select>
-					    <button type="submit" name="deleteRow" th:value="${iterationStatus.index}" th:style="${iterationStatus.count} == 1 ? 'display: none;' : ''">Hapus</button>
+					    
 					</td>
 				
 				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<button type="submit" name="addRow" class="btn btn-info">Tambah Jabatan Lainnya</button>
-				    </td>
-				</tr>
-
+ -->	
 				<!-- 
 				<tr style="height:3rem">
 					<td>Nama Instansi</td>

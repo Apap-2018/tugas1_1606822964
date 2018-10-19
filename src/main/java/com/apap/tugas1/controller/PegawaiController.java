@@ -3,6 +3,7 @@ package com.apap.tugas1.controller;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,6 +84,7 @@ public class PegawaiController {
 		return "addPegawai";
 	}
 	
+	
 	@RequestMapping(value = "/pegawai/instansi", method = RequestMethod.GET)
 	@ResponseBody
 	public List<InstansiModel> getInstansi(@RequestParam (value = "provinsiId", required = true) BigInteger provinsiId) {
@@ -102,6 +104,7 @@ public class PegawaiController {
 		return provinsi;
 	}
 	
+	
 	@RequestMapping(value="/pegawai/tambah", params={"addRow"}, method = RequestMethod.POST)
 	public String addRow(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
 		pegawai.getDaftarJabatan().add(new JabatanModel());
@@ -116,6 +119,7 @@ public class PegawaiController {
 		model.addAttribute("tanggalLahir", tanggalLahir);
 	    return "addPegawai";
 	}
+	
 	
 	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST, params={"deleteRow"})
 	private String deleteRow(@ModelAttribute PegawaiModel pegawai, Model model,final BindingResult bindingResult, final HttpServletRequest req) {
@@ -134,12 +138,47 @@ public class PegawaiController {
 		return "addPegawai";
 	}
 	
-	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
-	private String addPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, @RequestParam("instansi") BigInteger idInstansi, Model model) {
-		InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+/*	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
+	private String addPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
+		InstansiModel instansi = instansiService.viewAll().get(0);
+		JabatanModel jabatan = jabatanService.viewAll().get(0);
 		pegawai.setInstansi(instansi);
-		pegawaiService.addPegawai(pegawai);
 		
+//		pegawaiService.addPegawai(pegawai);
+		System.out.println(pegawai.getDaftarJabatan().get(0));
+		model.addAttribute("pegawai", pegawai);
+
+		return "addPegawaiSukses";
+	}*/
+	
+	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
+	private String addPegawaiSubmit(@RequestParam("nama") String nama,
+									@RequestParam("tempatLahir") String tempatLahir,
+									@RequestParam("tanggalLahir") String tanggalLahir,
+									@RequestParam("tahunMasuk") String tahunMasuk,
+									@RequestParam("idProvinsi") String idProvinsi,
+									@RequestParam("idInstansi") String idInstansi,
+									@RequestParam("idJabatan") String idJabatan,
+									Model model) throws ParseException {
+		InstansiModel instansi = instansiService.findInstansiById(BigInteger.valueOf(Long.parseLong(idInstansi)));
+		JabatanModel jabatan = jabatanService.findJabatanById(BigInteger.valueOf(Long.parseLong(idJabatan)));
+		PegawaiModel pegawai = new PegawaiModel();
+		
+		pegawai.setNama(nama);
+		pegawai.setTempatLahir(tempatLahir);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date parsed = simpleDateFormat.parse(tanggalLahir);
+		java.sql.Date tglLahir = new java.sql.Date(parsed.getTime()); 
+		pegawai.setTanggalLahir(tglLahir);
+		
+		pegawai.setTahunMasuk(tahunMasuk);
+		pegawai.setInstansi(instansi);
+		
+		pegawai.setDaftarJabatan(new ArrayList<JabatanModel>());
+		pegawai.getDaftarJabatan().add(jabatan);
+		instansi.getPegawaiList().add(pegawai);
+        
+//		pegawaiService.addPegawai(pegawai);
 		model.addAttribute("pegawai", pegawai);
 
 		return "addPegawaiSukses";

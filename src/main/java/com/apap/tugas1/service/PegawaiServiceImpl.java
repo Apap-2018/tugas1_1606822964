@@ -1,7 +1,9 @@
 package com.apap.tugas1.service;
 
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,17 @@ public class PegawaiServiceImpl implements PegawaiService{
 	@Override
 	public List<PegawaiModel> findByInstansi(InstansiModel instansi) {
 		return pegawaiDb.findByInstansi(instansi);
+	}
+
+	@Override
+	public PegawaiModel getPegawaiById(BigInteger id) {
+		return pegawaiDb.findById(id);
+	}
+
+	@Override
+	public List<PegawaiModel> findByInstansiAndTanggalLahirAndTahunMasuk(BigInteger instansi, Date tanggalLahir,
+			String tahunMasuk) {
+		return pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(instansi, tanggalLahir, tahunMasuk);
 	}
 
 }
