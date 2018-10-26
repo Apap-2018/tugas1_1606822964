@@ -18,4 +18,5 @@ public interface PegawaiService {
 	String generateNIP(PegawaiModel pegawai);
 	List<PegawaiModel> viewAll();
 	List<PegawaiModel> findByInstansi(InstansiModel instansi);
+	void updatePegawai(PegawaiModel pegawai);
 }

@@ -2,7 +2,6 @@ package com.apap.tugas1.controller;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,10 +106,6 @@ public class PegawaiController {
 	    model.addAttribute("allProvinsi", provinsiService.viewAll());
 		model.addAttribute("allInstansi", instansiService.viewByProvinsi(pegawai.getInstansi().getProvinsi()));
 		model.addAttribute("allJabatan", jabatanService.viewAll());
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String tanggalLahir = simpleDateFormat.format(pegawai.getTanggalLahir());
-		model.addAttribute("tanggalLahir", tanggalLahir);
 	    return "addPegawai";
 	}
 	
@@ -278,18 +273,44 @@ public class PegawaiController {
 	private String ubahPegawai(@RequestParam("nip") String nip, Model model) {
 		PegawaiModel pegawai = pegawaiService.getPegawaiByNip(nip);
 		model.addAttribute("pegawai", pegawai);
-		model.addAttribute("message", "");
+		model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewAll());
+		model.addAttribute("allJabatan", jabatanService.viewAll());
 
 		return "ubahPegawai";
 	}
 	
 	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.POST)
 	private String ubahPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
-		pegawaiService.addPegawai(pegawai);
+		pegawaiService.updatePegawai(pegawai);
 		
 		model.addAttribute("pegawai", pegawai);
-		model.addAttribute("message", "Berhasil mengubah data pegawai");
 
-		return "addPegawaiSukses";
+		return "ubahPegawaiSukses";
+	}
+	
+	@RequestMapping(value="/pegawai/ubah", params={"addRow"}, method = RequestMethod.POST)
+	public String addRowUbah(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
+		pegawai.getDaftarJabatan().add(new JabatanModel());
+	    model.addAttribute("pegawai", pegawai);
+	    
+	    model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewByProvinsi(pegawai.getInstansi().getProvinsi()));
+		model.addAttribute("allJabatan", jabatanService.viewAll());
+	    return "ubahPegawai";
+	}
+	
+	
+	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.POST, params={"deleteRow"})
+	private String deleteRowUbah(@ModelAttribute PegawaiModel pegawai, Model model,final BindingResult bindingResult, final HttpServletRequest req) {
+		Integer rowId =  Integer.valueOf(req.getParameter("deleteRow"));
+		pegawai.getDaftarJabatan().remove(rowId.intValue());
+		model.addAttribute("pegawai", pegawai); 
+		
+	    model.addAttribute("allProvinsi", provinsiService.viewAll());
+		model.addAttribute("allInstansi", instansiService.viewByProvinsi(pegawai.getInstansi().getProvinsi()));
+		model.addAttribute("allJabatan", jabatanService.viewAll());
+		
+		return "ubahPegawai";
 	}
 }

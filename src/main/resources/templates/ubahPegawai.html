@@ -13,8 +13,9 @@
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
 	<div style="margin-left:2rem">
-		<h4>Ubah Pegawai</h4>
-		<form th:action="@{/pegawai/tambah}" th:object="${pegawai}" method="POST" id="tambahPegawai">
+		<h4>Tambah Pegawai</h4>
+		<form th:action="@{/pegawai/ubah}" th:object="${pegawai}" method="POST" id="tambahPegawai">
+			<input type="hidden" th:field="*{nip}" />
 			<table>
 				<tr style="height:3rem">
 					<td style="width:10rem">Nama</td>
@@ -30,77 +31,61 @@
 				</tr>
 				<tr style="height:3rem">
 					<td>Tahun Masuk</td>
-					<td><input type="text" name="tahunMasuk" th:max="2018" class="form-control" required="required" th:value="*{tahunMasuk}" /></td>
+					<td><input type="number" name="tahunMasuk" th:max="2018" class="form-control" required="required" th:value="*{tahunMasuk}" /></td>
 				</tr>
-				
 				<tr style="height:3rem">
 					<td>Provinsi</td>
 					<td>
-						<select class="form-control" name="provinsi" id="provinsi" th:value="${allProvinsi}" form="tambahPegawai" required="required">
-						<option disabled="disabled" selected="selected" >Pilih Provinsi</option>
-					    	<option th:each="provinsi : ${allProvinsi}" th:value="${provinsi.id}" th:text="${provinsi.nama}"></option>
-					    </select>
+						<span th:if="*{instansi} == null">
+							<select  class="form-control" required="required" name="provinsi" id="provinsi" th:value="${allProvinsi}">
+								<option disabled="disabled" selected="selected" th:value="0">Pilih Provinsi</option>
+					      		<option th:each="provinsi : ${allProvinsi}" th:value="${provinsi.id}" th:text="${provinsi.nama}" ></option>
+					    	</select>
+						</span>
+						<span th:unless="*{instansi} == null">
+							<select  class="form-control" required="required" name="provinsi" id="provinsi" th:value="*{instansi.provinsi}">
+					      		<option  th:value="*{instansi.provinsi.id}" selected="selected" th:text="*{instansi.provinsi.nama}"></option>
+		                    	<option th:each="provinsi : ${allProvinsi}" th:value="${provinsi.id}" th:text="${provinsi.nama}" ></option>
+					    	</select>
+						</span>
 					</td>
 				</tr>
+							
 				<tr style="height:3rem">
 					<td>Nama Instansi</td>
 					<td>
-						<select class="form-control" th:name="instansi" required="required">
-							<option disabled="disabled" selected="selected" >Pilih Instansi</option>
-					    	<option th:each="instansi : ${allInstansi}" th:value="${instansi}" th:text="${instansi.nama}"></option>
-					    </select>
+						<span th:if="*{instansi} == null">
+							<select class="custom-select" th:field="*{instansi}" id="instansi" required="required">
+								<option disabled="disabled" selected="selected" th:value="0">Pilih Instansi</option>
+  	 							<option th:each="instansi : ${allInstansi}" th:value="${instansi.id}" th:text="${instansi.nama}" ></option>
+							</select>	
+						</span>
+						<span th:unless="*{instansi} == null">
+							<select class="custom-select" th:field="*{instansi}" id="instansi" name="instansi" required="required">
+		                    	<option th:value="*{instansi.id}" selected="selected" th:text="*{instansi.nama}"></option>
+		                    	<option th:each="instansi : ${allInstansi}" th:value="${instansi.id}" th:text="${instansi.nama}" ></option>
+		                	</select>	
+						</span>
 					</td>
 				</tr>
+				
+				<tr style="height:3rem" th:each="jabatan, iterationStat : *{daftarJabatan}">
+					<td th:text="'Jabatan '+${iterationStat.count}"></td>
+				 	<td>						
+						<select class="custom-select" name="daftarJabatan">
+							<option th:each="jabatan : ${allJabatan}" th:field="*{daftarJabatan[__${iterationStat.index}__]}" th:value="${jabatan.id}" th:text="${jabatan.nama}"></option>
+						</select>
+					</td>
+					<td><button type="submit" class="btn btn-danger btn-sm" name="deleteRow" th:value="${iterationStat.index}" th:style="${iterationStat.count} == 1 ? 'display: none;' : ''">Hapus</button>												</td>
+				
+				</tr>	
 				
 				<tr style="height:3rem">
-					<td>Jabatan</td>
-					<td>
-						<select class="form-control" name="jabatan">
-							<option disabled="disabled" selected="selected" >Pilih Jabatan</option>
-					    	<option th:each="jabatan : ${allJabatan}" th:value="${jabatan.id}" th:text="${jabatan.nama}"></option>
-					   		
-					    </select>
-					    <button type="submit" name="deleteRow" th:value="${iterationStatus.index}" th:style="${iterationStatus.count} == 1 ? 'display: none;' : ''">Hapus</button>
-					</td>
-				
-				</tr>
-				<tr>
 					<td></td>
 					<td>
-						<button type="submit" name="addRow" class="btn btn-info">Tambah Jabatan Lainnya</button>
-				    </td>
-				</tr>
-
-				<!-- 
-				<tr style="height:3rem">
-					<td>Nama Instansi</td>
-					<td>
-						<select class="form-control" th:name="instansi" id="instansi" form="tambahPegawai" required="required">
-							<option disabled="disabled" selected="selected" >Pilih Instansi</option>
-					    	<option th:each="instansi : ${allInstansi}" th:value="${instansi.id}" th:text="${instansi.nama}"></option>
-					    </select>
+						<button type="submit" class="btn btn-info btn-sm" name="addRow">Tambah Jabatan Lainnya</button>
 					</td>
 				</tr>
-					
-				<tr style="height:3rem" th:each="jabatan,iterationStatus : *{daftarJabatan}">
-					<td style="vertical-align: top; text-align: left;" height="50" th:text="${iterationStatus.count} == 1 ? 'Jabatan' : ''"></td>
-
-					<td>
-						<select class="form-control" name="jabatan">
-							<option disabled="disabled" selected="selected" >Pilih Jabatan</option>
-					    	<option th:each="jabatan : ${allJabatan}" th:field="*{daftarJabatan[__${iterationStatus.index}__].id}" th:value="${jabatan.id}" th:text="${jabatan.nama}"></option>
-					    </select>
-					    <button type="submit" name="deleteRow" th:value="${iterationStatus.index}" th:style="${iterationStatus.count} == 1 ? 'display: none;' : ''">Hapus</button>
-					</td>
-				
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<button type="submit" name="addRow" class="btn btn-info">Tambah Jabatan Lainnya</button>
-				    </td>
-				</tr>
-			 -->
 			</table>
 			<br>
 			<button type="submit" class="btn btn-warning">Simpan</button>
@@ -115,7 +100,7 @@
 			    provinsiId : $(this).val(),
 			    ajax : 'true'
 			}, function(data) {
-			    var html = '<option value="">Pilih Instansi</option>';
+			    var html = '<option disabled="disabled" selected="selected" value="0">Pilih Instansi</option>';
 			    for ( var i = 0; i < data.length; i++) {
 			        html += '<option value="' + data[i].id + '">'+ data[i].nama + '</option>';
 			    }
