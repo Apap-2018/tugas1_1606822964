@@ -12,7 +12,6 @@ import com.apap.tugas1.model.ProvinsiModel;
  *  @author Priscilla Tiffany
  */
 @Repository
-public interface ProvinsiDb extends JpaRepository<ProvinsiModel,Long>{
-	ProvinsiModel findById(BigInteger id);
+public interface ProvinsiDb extends JpaRepository<ProvinsiModel, BigInteger>{
 
 }

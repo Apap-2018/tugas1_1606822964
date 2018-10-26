@@ -14,8 +14,7 @@ import com.apap.tugas1.model.ProvinsiModel;
  *  @author Priscilla Tiffany
  */
 @Repository
-public interface InstansiDb extends JpaRepository<InstansiModel, Long>{
-	InstansiModel findById(BigInteger id);
+public interface InstansiDb extends JpaRepository<InstansiModel, BigInteger>{
 	List<InstansiModel> findByProvinsi(ProvinsiModel provinsi);
 	List<InstansiModel> findByNama(String nama);
 }

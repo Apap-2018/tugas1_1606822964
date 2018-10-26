@@ -34,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "pegawai")
 public class PegawaiModel implements Serializable{
 	@Id
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private BigInteger id;
 	
@@ -61,13 +62,13 @@ public class PegawaiModel implements Serializable{
 	@Column(name = "tahun_masuk", nullable = false)
 	private String tahunMasuk;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_instansi",referencedColumnName = "id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JsonIgnore
 	private InstansiModel instansi;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "jabatan_pegawai",  joinColumns = { @JoinColumn(name = "id_pegawai") },
             inverseJoinColumns = { @JoinColumn(name = "id_jabatan") })
 	private List<JabatanModel> daftarJabatan;

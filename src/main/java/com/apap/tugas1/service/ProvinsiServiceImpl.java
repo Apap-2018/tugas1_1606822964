@@ -2,6 +2,7 @@ package com.apap.tugas1.service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class ProvinsiServiceImpl implements ProvinsiService{
 	}
 
 	@Override
-	public ProvinsiModel findProvinsiById(BigInteger id) {
+	public Optional<ProvinsiModel> findProvinsiById(BigInteger id) {
 		return provinsiDb.findById(id);
 	}
 

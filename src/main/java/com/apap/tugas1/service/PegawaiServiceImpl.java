@@ -3,8 +3,8 @@ package com.apap.tugas1.service;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class PegawaiServiceImpl implements PegawaiService{
 	}
 
 	@Override
-	public String generateNIP(PegawaiModel pegawai) {
+	public String generateNIP(PegawaiModel pegawai) {	
 		String nip = "";
 		nip+=pegawai.getInstansi().getId();
         
@@ -45,7 +45,9 @@ public class PegawaiServiceImpl implements PegawaiService{
         String strDate = dateFormat.format(pegawai.getTanggalLahir());
         nip+=strDate;
         
-        int urutanPegawai = pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(pegawai.getInstansi().getId(), pegawai.getTanggalLahir(), pegawai.getTahunMasuk()).size()+1;
+        nip+=pegawai.getTahunMasuk();
+        
+        int urutanPegawai = pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(pegawai.getInstansi(), pegawai.getTanggalLahir(), pegawai.getTahunMasuk()).size()+1;
         if(urutanPegawai<10) {
         	nip+="0";
         }
@@ -65,14 +67,7 @@ public class PegawaiServiceImpl implements PegawaiService{
 	}
 
 	@Override
-	public PegawaiModel getPegawaiById(BigInteger id) {
+	public Optional<PegawaiModel> getPegawaiById(BigInteger id) {
 		return pegawaiDb.findById(id);
 	}
-
-	@Override
-	public List<PegawaiModel> findByInstansiAndTanggalLahirAndTahunMasuk(BigInteger instansi, Date tanggalLahir,
-			String tahunMasuk) {
-		return pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(instansi, tanggalLahir, tahunMasuk);
-	}
-
 }

@@ -12,6 +12,5 @@ import com.apap.tugas1.model.JabatanModel;
  *  @author Priscilla Tiffany
  */
 @Repository
-public interface JabatanDb extends JpaRepository<JabatanModel, Long>{
-	JabatanModel findById(BigInteger id);
+public interface JabatanDb extends JpaRepository<JabatanModel, BigInteger>{
 }

@@ -2,6 +2,7 @@ package com.apap.tugas1.service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class JabatanServiceImpl implements JabatanService{
 	}
 
 	@Override
-	public JabatanModel findJabatanById(BigInteger id) {
+	public Optional<JabatanModel> findJabatanById(BigInteger id) {
 		return jabatanDb.findById(id);
 	}
 

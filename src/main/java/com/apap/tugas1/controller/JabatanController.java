@@ -43,7 +43,7 @@ public class JabatanController {
 	
 	@RequestMapping(value = "/jabatan/view", method = RequestMethod.GET)
 	private String lihatJabatan(@RequestParam("idJabatan") BigInteger id, Model model) {
-		JabatanModel jabatan = jabatanService.findJabatanById(id);
+		JabatanModel jabatan = jabatanService.findJabatanById(id).get();
 		List<PegawaiModel> allPegawai = pegawaiService.viewAll();
 		int counter = 0;
 		for(int i=0;i<allPegawai.size();i++) {
@@ -60,7 +60,7 @@ public class JabatanController {
 	
 	@RequestMapping(value = "/jabatan/hapus", method = RequestMethod.POST)
 	private String delete(@ModelAttribute JabatanModel jabatan, Model model) throws Exception{
-		String namaJabatan = jabatanService.findJabatanById(jabatan.getId()).getNama();
+		String namaJabatan = jabatanService.findJabatanById(jabatan.getId()).get().getNama();
 		try {
 			jabatanService.deleteJabatan(jabatan);
 	    }
@@ -83,7 +83,7 @@ public class JabatanController {
 	
 	@RequestMapping(value = "/jabatan/ubah", method = RequestMethod.POST)
 	private String ubahJabatanSubmit(@ModelAttribute JabatanModel jabatan, Model model) {
-		JabatanModel jabatanLama = jabatanService.findJabatanById(jabatan.getId());
+		JabatanModel jabatanLama = jabatanService.findJabatanById(jabatan.getId()).get();
 		jabatanLama.setNama(jabatan.getNama());
 		jabatanLama.setDeskripsi(jabatan.getDeskripsi());
 		jabatanLama.setGaji_pokok(jabatan.getGaji_pokok());

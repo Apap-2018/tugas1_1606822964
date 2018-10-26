@@ -1,12 +1,9 @@
 package com.apap.tugas1.controller;
 
 import java.math.BigInteger;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,15 +69,12 @@ public class PegawaiController {
 		PegawaiModel pegawai = new PegawaiModel();
 		pegawai.setDaftarJabatan(new ArrayList<JabatanModel>());
 		pegawai.getDaftarJabatan().add(new JabatanModel());
+
 		model.addAttribute("pegawai", pegawai);
 		model.addAttribute("allProvinsi", provinsiService.viewAll());
 		model.addAttribute("allInstansi", instansiService.viewAll());
 		model.addAttribute("allJabatan", jabatanService.viewAll());
-		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		
-		model.addAttribute("tanggalLahir", dateFormat.format(date));
+
 		return "addPegawai";
 	}
 	
@@ -88,14 +82,14 @@ public class PegawaiController {
 	@RequestMapping(value = "/pegawai/instansi", method = RequestMethod.GET)
 	@ResponseBody
 	public List<InstansiModel> getInstansi(@RequestParam (value = "provinsiId", required = true) BigInteger provinsiId) {
-	    ProvinsiModel provinsi = provinsiService.findProvinsiById(provinsiId);
+	    ProvinsiModel provinsi = provinsiService.findProvinsiById(provinsiId).get();
 		return instansiService.viewByProvinsi(provinsi);
 	}
 	
 	@RequestMapping(value = "/pegawai/provinsi", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ProvinsiModel> getProvinsi(@RequestParam (value = "instansiId", required = true) BigInteger instansiId) {
-	    String namaInstansi = instansiService.findInstansiById(instansiId).getNama();
+	    String namaInstansi = instansiService.findInstansiById(instansiId).get().getNama();
 	    List<InstansiModel> daftarInstansi= instansiService.viewByNama(namaInstansi);
 	    List<ProvinsiModel> provinsi = new ArrayList<ProvinsiModel>();
 	    for(int i=0;i<daftarInstansi.size();i++) {
@@ -131,54 +125,12 @@ public class PegawaiController {
 		model.addAttribute("allInstansi", instansiService.viewByProvinsi(pegawai.getInstansi().getProvinsi()));
 		model.addAttribute("allJabatan", jabatanService.viewAll());
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String tanggalLahir = simpleDateFormat.format(pegawai.getTanggalLahir());
-		model.addAttribute("tanggalLahir", tanggalLahir);
-		
 		return "addPegawai";
 	}
 	
-/*	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
-	private String addPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
-		InstansiModel instansi = instansiService.viewAll().get(0);
-		JabatanModel jabatan = jabatanService.viewAll().get(0);
-		pegawai.setInstansi(instansi);
-		
-//		pegawaiService.addPegawai(pegawai);
-		System.out.println(pegawai.getDaftarJabatan().get(0));
-		model.addAttribute("pegawai", pegawai);
-
-		return "addPegawaiSukses";
-	}*/
-	
 	@RequestMapping(value = "/pegawai/tambah", method = RequestMethod.POST)
-	private String addPegawaiSubmit(@RequestParam("nama") String nama,
-									@RequestParam("tempatLahir") String tempatLahir,
-									@RequestParam("tanggalLahir") String tanggalLahir,
-									@RequestParam("tahunMasuk") String tahunMasuk,
-									@RequestParam("idProvinsi") String idProvinsi,
-									@RequestParam("idInstansi") String idInstansi,
-									@RequestParam("idJabatan") String idJabatan,
-									Model model) throws ParseException {
-		InstansiModel instansi = instansiService.findInstansiById(BigInteger.valueOf(Long.parseLong(idInstansi)));
-		JabatanModel jabatan = jabatanService.findJabatanById(BigInteger.valueOf(Long.parseLong(idJabatan)));
-		PegawaiModel pegawai = new PegawaiModel();
-		
-		pegawai.setNama(nama);
-		pegawai.setTempatLahir(tempatLahir);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date parsed = simpleDateFormat.parse(tanggalLahir);
-		java.sql.Date tglLahir = new java.sql.Date(parsed.getTime()); 
-		pegawai.setTanggalLahir(tglLahir);
-		
-		pegawai.setTahunMasuk(tahunMasuk);
-		pegawai.setInstansi(instansi);
-		
-		pegawai.setDaftarJabatan(new ArrayList<JabatanModel>());
-		pegawai.getDaftarJabatan().add(jabatan);
-		instansi.getPegawaiList().add(pegawai);
-        
-//		pegawaiService.addPegawai(pegawai);
+	private String addPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
+		pegawaiService.addPegawai(pegawai);
 		model.addAttribute("pegawai", pegawai);
 
 		return "addPegawaiSukses";
@@ -186,7 +138,7 @@ public class PegawaiController {
 	
 	@RequestMapping(value = "/pegawai/termuda-tertua", method = RequestMethod.GET)
 	private String lihatPegawaiTermudaTertua(@RequestParam("idInstansi") BigInteger idInstansi, Model model) {
-		InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+		InstansiModel instansi = instansiService.findInstansiById(idInstansi).get();
 		List<PegawaiModel> daftarPegawai = instansi.getPegawaiList();
 		
 
@@ -238,11 +190,11 @@ public class PegawaiController {
 		model.addAttribute("allInstansi", instansiService.viewAll());
 		model.addAttribute("allJabatan", jabatanService.viewAll());
 		if(idProvinsi.intValue()==0&&idJabatan.intValue()==0) {
-			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi).get();
 			model.addAttribute("allPegawai", pegawaiService.findByInstansi(instansi));
 		}
 		else if(idProvinsi.intValue()==0&&idInstansi.intValue()==0) {
-			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan).get();
 			List<PegawaiModel> allPegawai = pegawaiService.viewAll();
 			List<PegawaiModel> allPegawaiInJabatan = new ArrayList<PegawaiModel>();
 			for(int i=0;i<allPegawai.size();i++) {
@@ -254,7 +206,7 @@ public class PegawaiController {
 			model.addAttribute("allPegawai",allPegawaiInJabatan);
 		}
 		else if(idJabatan.intValue()==0&&idInstansi.intValue()==0) {
-			ProvinsiModel provinsi = provinsiService.findProvinsiById(idProvinsi);
+			ProvinsiModel provinsi = provinsiService.findProvinsiById(idProvinsi).get();
 			List<InstansiModel> allInstansiInProvinsi = instansiService.viewByProvinsi(provinsi);
 				
 			List<PegawaiModel> allPegawai = pegawaiService.viewAll();
@@ -267,10 +219,10 @@ public class PegawaiController {
 			model.addAttribute("allPegawai",allPegawaiInProvinsi);
 		}
 		else if(idProvinsi.intValue()==0) {
-			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi).get();
 			List<PegawaiModel> allPegawaiInInstansi = pegawaiService.findByInstansi(instansi);
 			
-			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan).get();
 			List<PegawaiModel> allPegawaiInJabatanInstansi = new ArrayList<PegawaiModel>();
 			for(int i=0;i<allPegawaiInInstansi.size();i++) {
 				for(int j=0;j<allPegawaiInInstansi.get(i).getDaftarJabatan().size();j++) {
@@ -281,10 +233,10 @@ public class PegawaiController {
 			model.addAttribute("allPegawai",allPegawaiInJabatanInstansi);
 		}
 		else if(idInstansi.intValue()==0) {
-			ProvinsiModel provinsi = provinsiService.findProvinsiById(idProvinsi);
+			ProvinsiModel provinsi = provinsiService.findProvinsiById(idProvinsi).get();
 			List<InstansiModel> allInstansiInProvinsi = instansiService.viewByProvinsi(provinsi);
 			
-			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan).get();
 			List<PegawaiModel> allPegawaiInProvinsiJabatan = new ArrayList<PegawaiModel>();
 			List<PegawaiModel> allPegawai = pegawaiService.viewAll();
 			for(int i=0;i<allPegawai.size();i++) {
@@ -300,15 +252,15 @@ public class PegawaiController {
 			model.addAttribute("allPegawai",allPegawaiInProvinsiJabatan);
 		}
 		else if(idJabatan.intValue()==0) {
-			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi).get();
 			List<PegawaiModel> allPegawai = pegawaiService.findByInstansi(instansi);
 			model.addAttribute("allPegawai",allPegawai);
 		}
 		else {
-			InstansiModel instansi = instansiService.findInstansiById(idInstansi);
+			InstansiModel instansi = instansiService.findInstansiById(idInstansi).get();
 			List<PegawaiModel> allPegawai = pegawaiService.findByInstansi(instansi);
 			
-			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan);
+			JabatanModel jabatan = jabatanService.findJabatanById(idJabatan).get();
 			List<PegawaiModel> allPegawaiInJabatanInstansiProvinsi = new ArrayList<PegawaiModel>();
 			for(int i=0;i<allPegawai.size();i++) {
 				for(int j=0;j<allPegawai.get(i).getDaftarJabatan().size();j++) {

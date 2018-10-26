@@ -15,9 +15,8 @@ import com.apap.tugas1.model.PegawaiModel;
  *  @author Priscilla Tiffany
  */
 @Repository
-public interface PegawaiDb extends JpaRepository<PegawaiModel, Long>{
+public interface PegawaiDb extends JpaRepository<PegawaiModel, BigInteger>{
 	PegawaiModel findByNip(String NIP);
-	List<PegawaiModel> findByInstansiAndTanggalLahirAndTahunMasuk(BigInteger instansi, Date tanggalLahir, String tahunMasuk);
+	List<PegawaiModel> findByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
 	List<PegawaiModel> findByInstansi(InstansiModel instansi);
-	PegawaiModel findById(BigInteger id);
 }
