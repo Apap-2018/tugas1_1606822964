@@ -17,7 +17,6 @@ import com.apap.tugas1.repository.PegawaiDb;
 /**
  * PegawaiServiceImpl
  * @author Priscilla Tiffany
- *
  */
 @Service
 @Transactional
@@ -47,7 +46,12 @@ public class PegawaiServiceImpl implements PegawaiService{
         
         nip+=pegawai.getTahunMasuk();
         
-        int urutanPegawai = pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(pegawai.getInstansi(), pegawai.getTanggalLahir(), pegawai.getTahunMasuk()).size()+1;
+        List<PegawaiModel> pegawaiSama = pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(pegawai.getInstansi(), pegawai.getTanggalLahir(), pegawai.getTahunMasuk());
+        int urutanPegawai = 1;
+        if(pegawaiSama.size()>0) {
+        	urutanPegawai = Integer.parseInt(pegawaiSama.get(pegawaiSama.size()-1).getNip().substring(14,16))+1;
+        }
+        
         if(urutanPegawai<10) {
         	nip+="0";
         }
@@ -74,6 +78,13 @@ public class PegawaiServiceImpl implements PegawaiService{
 	@Override
 	public void updatePegawai(PegawaiModel pegawai) {
 		PegawaiModel oldPegawai = pegawaiDb.findByNip(pegawai.getNip());
+		
+		if(!oldPegawai.getTanggalLahir().equals(pegawai.getTanggalLahir())||
+			!oldPegawai.getTahunMasuk().equals(pegawai.getTahunMasuk())||
+			!oldPegawai.getInstansi().equals(pegawai.getInstansi())) {
+			oldPegawai.setNip(this.generateNIP(pegawai));
+			pegawai.setNip(oldPegawai.getNip());
+		}
 		oldPegawai.setNama(pegawai.getNama());
 		oldPegawai.setTahunMasuk(pegawai.getTahunMasuk());
 		oldPegawai.setInstansi(pegawai.getInstansi());
@@ -81,7 +92,6 @@ public class PegawaiServiceImpl implements PegawaiService{
 		oldPegawai.setTempatLahir(pegawai.getTempatLahir());
 		oldPegawai.setDaftarJabatan(pegawai.getDaftarJabatan());
 		
-		oldPegawai.setNip(this.generateNIP(pegawai));
 		pegawaiDb.save(oldPegawai);
 		
 	}

@@ -11,10 +11,12 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<h4>Sukses!</h4>
-		<p>Pegawai dengan NIP <a style="color:#d4af37" th:text="${pegawai.nip}"></a> berhasil diubah</p>
+		<p>Pegawai dengan NIP <a style="color:#d4af37" th:text="${oldNip}"></a> berhasil diubah</p>
+		<a th:href="@{|/pegawai?nip=${newNip}|}"><button type="button" class="btn btn-warning">Kembali ke Detail Pegawai</button></a>
 	</div>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 
 

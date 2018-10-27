@@ -11,11 +11,14 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<h4>Sukses!</h4>
 		<p>Pegawai dengan NIP <a style="color:#d4af37" th:text="${pegawai.nip}"></a> berhasil ditambahkan</p>
+		<a th:href="@{|/pegawai?nip=${pegawai.nip}|}"><button type="button" class="btn btn-info" style="margin-right:1rem;">Lihat Detail Pegawai</button></a>
 		<a href="/pegawai/tambah"><button type="button" class="btn btn-warning">Tambah Pegawai Baru</button></a>
+		
 	</div>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 
 

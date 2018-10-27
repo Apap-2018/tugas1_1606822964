@@ -2,21 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Home</title>
+	<title>SIPEG</title>
 
 	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
 	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+	
 </head>
 
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<h4>Sistem Informasi Kepegawaian</h4>
 		<p>Selamat datang di Sistem Informasi Kepegawaian</p>
 	</div>
 	<hr>
-	<div style="margin-left:1rem" class="col-lg-4">
+	<div style="margin-left:1rem" class="col-lg-5">
 		<h4>Lihat Data Pegawai Berdasarkan NIP</h4>
 		<p>Masukkan Nomor Induk Pegawai</p>
 		<form th:action="@{/pegawai}" method="GET">
@@ -26,7 +27,7 @@
 		</form>
 	</div>
 	<hr>
-	<div style="margin-left:1rem" class="col-lg-4">
+	<div style="margin-left:1rem" class="col-lg-5">
 		<h4>Lihat Detail Jabatan</h4>
 		<p>Pilih Jabatan</p>
 		<form th:action="@{/jabatan/view}" method="GET">
@@ -39,7 +40,7 @@
 		</form>
 	</div>
 	<hr>
-	<div style="margin-left:1rem" class="col-lg-4">
+	<div style="margin-left:1rem" class="col-lg-5">
 		<h4>Lihat Pegawai Termuda dan Tertua</h4>
 		<p>Pilih Instansi</p>
 		<form th:action="@{/pegawai/termuda-tertua}" method="GET">
@@ -51,6 +52,8 @@
 		    <button type="submit" class="btn btn-info">Lihat</button>
 		</form>
 	</div>
+	<br><br><br>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 
 </html>

@@ -11,10 +11,9 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
-		<p th:text="${message}" style="color:#d4af37"></p>
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<h4 th:text="'Lihat Data Pegawai - '+ ${pegawai.nip}"></h4>
-		<div class="row" style="margin-left:0rem;margin-top:1rem">
+		<div class="row" style="margin-left:0rem;margin-top:1rem;margin-right:0;">
 			<div class="column" style="margin-right:3rem">
 				<p>NIP</p>
 				<p>Nama</p>
@@ -28,6 +27,7 @@
 				</ul>
 				<p>Gaji</p>			
 			</div>
+			
 			<div class="column">
 				<p th:text="${pegawai.nip}"></p>
 				<p th:text="${pegawai.nama}"></p>
@@ -47,5 +47,6 @@
 		<a class="btn btn-warning" th:href="@{|/pegawai/ubah/?nip=${pegawai.nip}|}">Ubah</a>
 		
 	</div>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 </html>

@@ -11,14 +11,14 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<h4>Tambah Jabatan</h4>
 		<form th:action="@{/jabatan/tambah}" th:object="${jabatan}" method="POST">
 			<table>
 				<tr style="height:3rem">
-					<td style="width:10rem">Nama</td>
+					<td style="width:7rem">Nama</td>
 					<td></td>
-					<td><input type="text" name="nama" maxlength="255" class="form-control" required="required" /></td>
+					<td style="width:28rem"><input type="text" name="nama" maxlength="255" class="form-control" required="required" /></td>
 				</tr>
 				<tr style="height:3rem">
 					<td>Deskripsi</td>
@@ -36,6 +36,8 @@
 			<button type="submit" class="btn btn-warning">Simpan</button>
 		</form>
 	</div>
+	
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 
 

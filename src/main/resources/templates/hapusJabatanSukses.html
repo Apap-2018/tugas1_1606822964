@@ -11,10 +11,12 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<h4>Sukses!</h4>
 		<p>Jabatan <a th:text="${namaJabatan}" style="color:#d4af37"></a> berhasil dihapus</p>
+		<a href="/jabatan/tambah"><button type="button" class="btn btn-warning">Tambah Jabatan Baru</button></a>
 	</div>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 
 

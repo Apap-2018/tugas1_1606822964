@@ -1,6 +1,7 @@
 package com.apap.tugas1.controller;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,9 @@ public class JabatanController {
 		}
 		model.addAttribute("jabatan", jabatan);
 		model.addAttribute("jumlahPegawai", counter);
+		
+		DecimalFormat df = new DecimalFormat("#,###");
+		model.addAttribute("gaji", df.format(jabatan.getGaji_pokok()));
 		model.addAttribute("message", "");
 		return "lihatJabatan";
 	}
@@ -66,7 +70,7 @@ public class JabatanController {
 	    }
 		catch (Exception e) {
 			model.addAttribute("message", "Maaf, jabatan tidak dapat dihapus");
-			model.addAttribute("jabatan", jabatanService.findJabatanById(jabatan.getId()));
+			model.addAttribute("jabatan", jabatanService.findJabatanById(jabatan.getId()).get());
 			return "lihatJabatan";
 	    }
 		
@@ -76,7 +80,7 @@ public class JabatanController {
 	
 	@RequestMapping(value = "/jabatan/ubah", method = RequestMethod.GET)
 	private String ubahJabatan(@RequestParam("idJabatan") BigInteger id, Model model) {
-		model.addAttribute("jabatan", jabatanService.findJabatanById(id));
+		model.addAttribute("jabatan", jabatanService.findJabatanById(id).get());
 		model.addAttribute("message", "");
 		return "ubahJabatan";
 	}

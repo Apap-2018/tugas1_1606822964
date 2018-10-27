@@ -12,7 +12,7 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<h4>Tambah Pegawai</h4>
 		<form th:action="@{/pegawai/tambah}" th:object="${pegawai}" method="POST" id="tambahPegawai">
 			<table>
@@ -90,6 +90,8 @@
 			<button type="submit" class="btn btn-warning">Simpan</button>
 		</form>
 	</div>
+	<br><br><br>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 
 <script th:inline="javascript">

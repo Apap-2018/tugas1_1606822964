@@ -55,11 +55,10 @@ public class PegawaiController {
 	private String lihatPegawai(@RequestParam("nip") String nip, Model model) {
 		PegawaiModel pegawai = pegawaiService.getPegawaiByNip(nip);
 		
-		DecimalFormat df = new DecimalFormat("#");
+		DecimalFormat df = new DecimalFormat("#,###");
 		
 		model.addAttribute("pegawai", pegawai);
 		model.addAttribute("gaji", df.format(pegawai.getGaji()));
-		model.addAttribute("message", "");
 		return "lihatPegawai";
 	}
 	
@@ -159,7 +158,7 @@ public class PegawaiController {
 			}
 			model.addAttribute("message", "");
 		}	
-		DecimalFormat df = new DecimalFormat("#");
+		DecimalFormat df = new DecimalFormat("#,###");
 		
 		model.addAttribute("pegawaiTermuda", pegawaiTermuda);
 		model.addAttribute("gajiPegawaiTermuda", df.format(pegawaiTermuda.getGaji()));
@@ -282,9 +281,9 @@ public class PegawaiController {
 	
 	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.POST)
 	private String ubahPegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
+		model.addAttribute("oldNip", pegawai.getNip());
 		pegawaiService.updatePegawai(pegawai);
-		
-		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("newNip",pegawai.getNip());
 
 		return "ubahPegawaiSukses";
 	}

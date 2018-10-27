@@ -2,15 +2,12 @@ package com.apap.tugas1.model;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,17 +36,6 @@ public class JabatanModel implements Serializable{
 	@NotNull
 	@Column(name = "gaji_pokok", nullable = false)
 	private Double gaji_pokok;
-/*	
-	@ManyToMany(mappedBy = "daftarJabatan", fetch= FetchType.EAGER)
-	private List<PegawaiModel> pegawai;
-
-	public List<PegawaiModel> getPegawai() {
-		return pegawai;
-	}
-
-	public void setPegawai(List<PegawaiModel> pegawai) {
-		this.pegawai = pegawai;
-	}*/
 
 	public BigInteger getId() {
 		return id;

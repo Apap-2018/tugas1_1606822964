@@ -13,7 +13,7 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem;padding-right:2rem;">
+	<div style="margin-left:2rem;padding-right:2rem;margin-top:3rem;">
 		<h4>Cari Pegawai</h4>
 		<form th:action="@{/pegawai/cari}" method="GET">
 			<table>
@@ -79,10 +79,18 @@
 			</tr>
 		</table>
 	</div>
+	<br><br><br>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 	<script>
 	$(document).ready( function () {
-	    $('#pegawai').DataTable();
+	    $('#pegawai').DataTable({
+    		"columnDefs": [ {
+    			"targets": 0,
+    			"orderable": false,
+    			"sortable": false
+    		} ]
+	    });
 	} );
 	
 	$('#provinsi').change(

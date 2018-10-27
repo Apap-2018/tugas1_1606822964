@@ -16,8 +16,9 @@
 	</head>
 	
 	<body>
-		<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark "  style="background-color: #003366;">
-			<a class="navbar-brand" href="/">SIPEG</a>
+		<!-- Header -->
+		<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark fixed-top"  style="background-color: #003366;">
+			<a class="navbar-brand" href="/" style="color:#d4af37">SIPEG</a>
 			<div class="collapse navbar-collapse navbar-nav mr-auto" id="navbarSupportedContent">
 				<a class="nav-link" href="/">Home</a>
 				<a class="nav-link" href="/pegawai/tambah">Tambah Pegawai</a>
@@ -26,5 +27,19 @@
 				<a class="nav-link" href="/jabatan/viewall">Lihat Semua Jabatan</a>
 			</div>
 		</nav>
+		<!-- Header -->
+		
+		<!-- Footer -->
+		<footer th:fragment="footer" class="page-footer font-small blue fixed-bottom" style="background-color: #003366;bottom:0">
+		
+		  <!-- Copyright -->
+		  <div class="footer-copyright text-center py-3" style="color:#d3d3d3">
+		  	SIPEG &copy; 2018 Copyright: <a href="https://www.linkedin.com/in/priscilla-tiffany-9b206b13a/" target="blank" style="color:#d4af37">Priscilla Tiffany</a>
+		  	
+		  </div>
+		  <!-- Copyright -->
+		
+		</footer>
+		<!-- Footer -->
 	</body>
 </html>

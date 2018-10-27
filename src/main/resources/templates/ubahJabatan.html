@@ -11,16 +11,16 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<br>
-	<div style="margin-left:2rem">
+	<div style="margin-left:2rem;margin-top:3rem;">
 		<p th:text="${message}" style="color:#d4af37"></p>
 		<h4>Ubah Jabatan</h4>
 		<form th:action="@{/jabatan/ubah}" th:object="${jabatan}" method="POST">
 			<input type="hidden" th:field="*{id}" />
 			<table>
 				<tr style="height:3rem">
-					<td style="width:10rem">Nama</td>
+					<td style="width:7rem">Nama</td>
 					<td></td>
-					<td><input type="text" name="nama" maxlength="255" class="form-control" th:value="${jabatan.nama}"/></td>
+					<td style="width:28rem"><input type="text" name="nama" maxlength="255" class="form-control" th:value="${jabatan.nama}"/></td>
 				</tr>
 				<tr style="height:3rem">
 					<td>Deskripsi</td>
@@ -35,10 +35,11 @@
 			
 			</table>
 			<br>
-			<button type="submit" class="btn btn-warning">Simpan</button>
+			<button type="submit" class="btn btn-warning" style="margin-right:1rem;">Simpan</button>
 			<a th:href="@{|/jabatan/view?idJabatan=${jabatan.id}|}"><button type="button" class="btn btn-danger">Cancel</button></a>
 		</form>
 	</div>
+	<footer th:replace="fragments/fragment :: footer"></footer>
 </body>
 
 
